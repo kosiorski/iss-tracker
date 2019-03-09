@@ -18,7 +18,7 @@ public class IssData {
 
   private String timestamp;
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "position_id")
   private Position iss_position;
 }
