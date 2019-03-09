@@ -23,7 +23,7 @@ public class IssController {
     this.trackerService = trackerService;
   }
 
-  @GetMapping()
+  @GetMapping("/iss")
   public IssData getIssData() {
 
     final String url = "http://api.open-notify.org/iss-now.json";
@@ -37,12 +37,18 @@ public class IssController {
     return issData;
   }
 
+//  public List<Astronaut> getAstronauts(){
+//
+//
+//
+//  }
+
   @GetMapping("/distance")
   public double getDistance() {
     Tracker tracker = new Tracker();
 
-    Position startPosition = new Position(-45.3286, -67.0293);
-    Position endPosition = new Position(-45.3438, -66.9908);
+    Position startPosition = new Position(-51.1757, -65.2334);
+    Position endPosition = new Position(-51.257, -64.3006);
 
     return trackerService.countDistance(startPosition, endPosition);
   }
