@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import pl.kosiorski.isstracker.model.IssData;
 import pl.kosiorski.isstracker.model.Position;
 import pl.kosiorski.isstracker.model.Tracker;
+import pl.kosiorski.isstracker.service.AstronautService;
 import pl.kosiorski.isstracker.service.IssDataService;
 import pl.kosiorski.isstracker.service.TrackerService;
 
@@ -16,11 +17,16 @@ public class IssController {
 
   private final IssDataService issDataService;
   private final TrackerService trackerService;
+  private final AstronautService astronautService;
 
   @Autowired
-  public IssController(IssDataService issDataService, TrackerService trackerService) {
+  public IssController(
+      IssDataService issDataService,
+      TrackerService trackerService,
+      AstronautService astronautService) {
     this.issDataService = issDataService;
     this.trackerService = trackerService;
+    this.astronautService = astronautService;
   }
 
   @GetMapping("/iss")
@@ -37,9 +43,16 @@ public class IssController {
     return issData;
   }
 
-//  public List<Astronaut> getAstronauts(){
+//  @GetMapping("/astronauts")
+//  public List<Astronaut> getAstronauts() {
 //
+//    final String url = "http://api.open-notify.org/astros.json";
 //
+//    RestTemplate restTemplate = new RestTemplate();
+//    String json = restTemplate.getForObject(url, String.class);
+//
+//    Astronaut astronaut = new Gson().fromJson(json, Astronaut.class);
+//    astronautService.save(astronaut);
 //
 //  }
 
