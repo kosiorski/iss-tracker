@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class InternationalSpaceStation {
+public class IssData {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -18,5 +18,5 @@ public class Position {
   private double longitude;
 
   @OneToOne(mappedBy = "iss_position")
-  private InternationalSpaceStation internationalSpaceStation;
+  private IssData internationalSpaceStation;
 }
