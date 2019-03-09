@@ -24,7 +24,7 @@ public class TrackerServiceImpl implements TrackerService {
   @Override
   public double countDistance(Position startPosition, Position endPosition) {
 
-    final int R = 6371 + 408; // Earth radius + ISS orbit height in kilometres;
+    final int R = 6371; // + 408; // Earth radius + ISS orbit height in kilometres;
 
     double latitudeDistance =
         Math.toRadians(endPosition.getLatitude() - startPosition.getLatitude());
