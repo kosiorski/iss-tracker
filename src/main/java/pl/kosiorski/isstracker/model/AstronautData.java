@@ -18,7 +18,10 @@ public class AstronautData {
   private String message;
   private int number;
 
-  @ElementCollection
-  @CollectionTable(name = "people", joinColumns = @JoinColumn(name = "astronaut_id"))
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinTable(
+      name = "astronautData_astronaut",
+      joinColumns = @JoinColumn(name = "astronautData_id"),
+      inverseJoinColumns = @JoinColumn(name = "astronaut_id"))
   private List<Astronaut> people;
 }
