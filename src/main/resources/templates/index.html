@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+
+
+    <style>
+        /* Set the size of the div element that contains the map */
+        #map {
+            height: 400px; /* The height is 400 pixels */
+            width: 100%; /* The width is the width of the web page */
+        }
+    </style>
+</head>
+<body>
+
+
+<h1>ISS tracker</h1>
+
+
+<div id="map"></div>
+
+<a th:href="@{'/home'}">
+    <button type="button">Get position</button>
+</a>
+
+<td th:text="*{currentPosition.latitude}"></td>
+<td th:text="*{currentPosition.longitude}"></td>
+
+
+<script>
+    function initMap() {
+
+
+// function getPosition() {
+//     var positionFromJson = Packages.pl.kosiorski.isstracker.controlle.HomepageControllerr.getIssPositionFromJson();
+// }
+
+
+        var myFunc01 = function () {
+            var i = 0;
+            while (i < 10) {
+                (function (i) {
+                    setTimeout(function () {
+
+
+                        var lat = [[${currentPosition.latitude}]];
+                        var lng = [[${currentPosition.longitude}]];
+
+                        var uluru = {lat: lat, lng: lng};
+
+// The map, centered at Uluru
+
+                        var map = new google.maps.Map(
+                            document.getElementById('map'), {zoom: 4, center: uluru});
+// The marker, positioned at Uluru
+
+                        var marker = new google.maps.Marker({position: uluru, map: map});
+
+
+                    }, 5000 * i)
+                })(i++)
+            }
+        };
+
+        myFunc01();
+
+
+    }
+</script>
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKMSf74WjPCIZBva_RDKFJgs0RHzmUkj8&callback=initMap">
+</script>
+
+</body>
+</html>
