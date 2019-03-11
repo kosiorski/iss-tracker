@@ -8,7 +8,7 @@
     <style>
         /* Set the size of the div element that contains the map */
         #map {
-            height: 400px; /* The height is 400 pixels */
+            height: 700px; /* The height is 400 pixels */
             width: 100%; /* The width is the width of the web page */
         }
     </style>
@@ -29,62 +29,63 @@
 
 <script>
 
-
-    // var obj = $.getJSON('http://localhost:8080/position', function (data) {
-    //
-    // });
-
-
-    var getJSON = function (url, callback) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.responseType = 'json';
-        xhr.onload = function () {
-            var status = xhr.status;
-            if (status === 200) {
-                callback(null, xhr.response);
-            } else {
-                callback(status, xhr.response);
-            }
-        };
-        xhr.send();
-    };
-
-
-
-
     function initMap() {
 
+        var intervalInMilliseconds = 1000;
+        var markers = [];
+        // var icon = 'https://i.ibb.co/72gpnJ4/956251-200.png';
 
-        var tid = setInterval(mycode, 2000);
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 8,
+            center: {lat: 0, lng: 0},
+            mapTypeId: 'hybrid'
+        });
+
+
+        setInterval(mycode, intervalInMilliseconds);
+
         function mycode() {
-
             getJSON('http://localhost:8080/position',
                 function (err, data) {
                     if (err !== null) {
                         console.log('Something went wrong: ' + err);
                     } else {
-                        console.log('position delivered');
-                        uluru = {lat: data.latitude, lng: data.longitude}
 
+                        setMapOnAll(null);
 
-                        var map = new google.maps.Map(
-                            document.getElementById('map'), {zoom: 3, center: uluru});
-                        // The marker, positioned at Uluru
-                        var marker = new google.maps.Marker({position: uluru, map: map});
-
+                        map.setCenter({lat: data.latitude, lng: data.longitude});
+                        map.setZoom({zoom: 9});
+                        var marker = new google.maps.Marker({
+                            position: {lat: data.latitude, lng: data.longitude},
+                            map: map,
+                            // icon: icon
+                        });
+                        markers.push(marker);
                     }
                 });
-
         }
 
+        function setMapOnAll(map) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
+            }
+        }
 
-
-
-
-
-
-
+        var getJSON = function (url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = function () {
+                var status = xhr.status;
+                if (status === 200) {
+                    callback(null, xhr.response);
+                } else {
+                    callback(status, xhr.response);
+                }
+            };
+            xhr.send();
+        };
     }
 </script>
 
