@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Homepage</title>
@@ -12,6 +12,11 @@
             width: 100%; /* The width is the width of the web page */
         }
     </style>
+
+    <script
+            src="http://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -21,50 +26,63 @@
 
 <div id="map"></div>
 
-<a th:href="@{'/home'}">
-    <button type="button">Get position</button>
-</a>
-
-<td th:text="*{currentPosition.latitude}"></td>
-<td th:text="*{currentPosition.longitude}"></td>
-
 
 <script>
+
+
+    // var obj = $.getJSON('http://localhost:8080/position', function (data) {
+    //
+    // });
+
+
+    var getJSON = function (url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            var status = xhr.status;
+            if (status === 200) {
+                callback(null, xhr.response);
+            } else {
+                callback(status, xhr.response);
+            }
+        };
+        xhr.send();
+    };
+
+
+
+
     function initMap() {
 
 
-// function getPosition() {
-//     var positionFromJson = Packages.pl.kosiorski.isstracker.controlle.HomepageControllerr.getIssPositionFromJson();
-// }
+        var tid = setInterval(mycode, 2000);
+        function mycode() {
 
+            getJSON('http://localhost:8080/position',
+                function (err, data) {
+                    if (err !== null) {
+                        console.log('Something went wrong: ' + err);
+                    } else {
+                        console.log('position delivered');
+                        uluru = {lat: data.latitude, lng: data.longitude}
 
-        var myFunc01 = function () {
-            var i = 0;
-            while (i < 10) {
-                (function (i) {
-                    setTimeout(function () {
-
-
-                        var lat = [[${currentPosition.latitude}]];
-                        var lng = [[${currentPosition.longitude}]];
-
-                        var uluru = {lat: lat, lng: lng};
-
-// The map, centered at Uluru
 
                         var map = new google.maps.Map(
-                            document.getElementById('map'), {zoom: 4, center: uluru});
-// The marker, positioned at Uluru
-
+                            document.getElementById('map'), {zoom: 3, center: uluru});
+                        // The marker, positioned at Uluru
                         var marker = new google.maps.Marker({position: uluru, map: map});
 
+                    }
+                });
 
-                    }, 5000 * i)
-                })(i++)
-            }
-        };
+        }
 
-        myFunc01();
+
+
+
+
+
 
 
     }
