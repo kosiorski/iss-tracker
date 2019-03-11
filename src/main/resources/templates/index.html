@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Homepage</title>
@@ -8,10 +8,15 @@
     <style>
         /* Set the size of the div element that contains the map */
         #map {
-            height: 400px; /* The height is 400 pixels */
+            height: 700px; /* The height is 400 pixels */
             width: 100%; /* The width is the width of the web page */
         }
     </style>
+
+    <script
+            src="http://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -21,52 +26,66 @@
 
 <div id="map"></div>
 
-<a th:href="@{'/home'}">
-    <button type="button">Get position</button>
-</a>
-
-<td th:text="*{currentPosition.latitude}"></td>
-<td th:text="*{currentPosition.longitude}"></td>
-
 
 <script>
+
     function initMap() {
 
-
-// function getPosition() {
-//     var positionFromJson = Packages.pl.kosiorski.isstracker.controlle.HomepageControllerr.getIssPositionFromJson();
-// }
-
-
-        var myFunc01 = function () {
-            var i = 0;
-            while (i < 10) {
-                (function (i) {
-                    setTimeout(function () {
+        var intervalInMilliseconds = 1000;
+        var markers = [];
+        // var icon = 'https://i.ibb.co/72gpnJ4/956251-200.png';
 
 
-                        var lat = [[${currentPosition.latitude}]];
-                        var lng = [[${currentPosition.longitude}]];
-
-                        var uluru = {lat: lat, lng: lng};
-
-// The map, centered at Uluru
-
-                        var map = new google.maps.Map(
-                            document.getElementById('map'), {zoom: 4, center: uluru});
-// The marker, positioned at Uluru
-
-                        var marker = new google.maps.Marker({position: uluru, map: map});
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 8,
+            center: {lat: 0, lng: 0},
+            mapTypeId: 'hybrid'
+        });
 
 
-                    }, 5000 * i)
-                })(i++)
+        setInterval(mycode, intervalInMilliseconds);
+
+        function mycode() {
+            getJSON('http://localhost:8080/position',
+                function (err, data) {
+                    if (err !== null) {
+                        console.log('Something went wrong: ' + err);
+                    } else {
+
+                        setMapOnAll(null);
+
+                        map.setCenter({lat: data.latitude, lng: data.longitude});
+                        map.setZoom({zoom: 9});
+                        var marker = new google.maps.Marker({
+                            position: {lat: data.latitude, lng: data.longitude},
+                            map: map,
+                            // icon: icon
+                        });
+                        markers.push(marker);
+                    }
+                });
+        }
+
+        function setMapOnAll(map) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(map);
             }
+        }
+
+        var getJSON = function (url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.responseType = 'json';
+            xhr.onload = function () {
+                var status = xhr.status;
+                if (status === 200) {
+                    callback(null, xhr.response);
+                } else {
+                    callback(status, xhr.response);
+                }
+            };
+            xhr.send();
         };
-
-        myFunc01();
-
-
     }
 </script>
 

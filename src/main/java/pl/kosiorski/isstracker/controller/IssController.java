@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import pl.kosiorski.isstracker.model.Astronaut;
-import pl.kosiorski.isstracker.model.AstronautData;
-import pl.kosiorski.isstracker.model.Position;
-import pl.kosiorski.isstracker.model.Tracker;
+import pl.kosiorski.isstracker.model.*;
 import pl.kosiorski.isstracker.service.AstronautDataService;
 import pl.kosiorski.isstracker.service.AstronautService;
 import pl.kosiorski.isstracker.service.IssDataService;
@@ -36,13 +33,13 @@ public class IssController {
     this.astronautDataService = astronautDataService;
   }
 
-//  @GetMapping("/iss")
-//  public IssData getIssData() {
-//
-//    HomepageController.getIssDataFromJson(issDataService);
-//
-//    return issData;
-//  }
+  //  @GetMapping("/iss")
+  //  public IssData getIssData() {
+  //
+  //    HomepageController.getIssDataFromJson(issDataService);
+  //
+  //    return issData;
+  //  }
 
   @GetMapping("/astronauts")
   public List<Astronaut> getAstronauts() {
@@ -67,5 +64,19 @@ public class IssController {
     Position endPosition = new Position(-51.257, -64.3006);
 
     return trackerService.countDistance(startPosition, endPosition);
+  }
+
+  @GetMapping("/position")
+  public Position getPosition() {
+
+    final String url = "http://api.open-notify.org/iss-now.json";
+
+    RestTemplate restTemplate = new RestTemplate();
+    String json = restTemplate.getForObject(url, String.class);
+
+    IssData issData = new Gson().fromJson(json, IssData.class);
+
+    Position position = issData.getIss_position();
+    return position;
   }
 }
