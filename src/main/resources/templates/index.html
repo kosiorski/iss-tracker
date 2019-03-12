@@ -6,64 +6,105 @@
 
 
     <style>
-        /* Set the size of the div element that contains the map */
         #map {
-            height: 700px; /* The height is 400 pixels */
-            width: 100%; /* The width is the width of the web page */
+            height: 500px;
+            width: 100%;
         }
     </style>
 
     <script
             src="http://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous">
+    </script>
 </head>
 <body>
 
 
-<h1>ISS tracker</h1>
-
+<h2>ISS tracker</h2>
 
 <div id="map"></div>
 
+<!--<input id="clickMe" type="button" value="Start Tracking" onclick="tracking();"/>-->
+
+<input type="number" id="lat"/>
+<input type="number" id="lng"/>
+
+<input id="stop" type="button" value="stop"/>
+<input id="start" type="button" value="start"/>
+
 
 <script>
-
     function initMap() {
 
         var intervalInMilliseconds = 1000;
+        var currentLat;
+        var currentLng;
+        var marker;
         var markers = [];
-        // var icon = 'https://i.ibb.co/72gpnJ4/956251-200.png';
-
 
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 8,
-            center: {lat: 0, lng: 0},
+            zoom: 6,
+            center: {lat: 51.11007742432243, lng: 17.033081393335124},
             mapTypeId: 'hybrid'
         });
 
+        var icon = {
+            url: "https://i.ibb.co/72gpnJ4/956251-200.png",
+            scaledSize: new google.maps.Size(70, 70),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(0, 0)
+        };
 
-        setInterval(mycode, intervalInMilliseconds);
+        $(function () {
+            var timer = null,
+                interval = intervalInMilliseconds,
+                value = 0;
 
-        function mycode() {
-            getJSON('http://localhost:8080/position',
-                function (err, data) {
-                    if (err !== null) {
-                        console.log('Something went wrong: ' + err);
-                    } else {
+            $("#start").click(function () {
+                if (timer !== null) return;
+                timer = setInterval(function () {
 
-                        setMapOnAll(null);
 
-                        map.setCenter({lat: data.latitude, lng: data.longitude});
-                        map.setZoom({zoom: 9});
-                        var marker = new google.maps.Marker({
-                            position: {lat: data.latitude, lng: data.longitude},
-                            map: map,
-                            // icon: icon
+                    getJSON('http://localhost:8080/position',
+                        function (err, data) {
+                            if (err !== null) {
+                                console.log('Something went wrong: ' + err);
+                            } else {
+                                setMarker(data);
+
+                                currentLat = marker.getPosition().lat();
+                                currentLng = marker.getPosition().lng();
+
+                                $("#lat").val(data.latitude);
+                                $("#lng").val(data.longitude);
+
+                            }
                         });
-                        markers.push(marker);
-                    }
-                });
+
+                }, interval);
+            });
+
+            $("#stop").click(function () {
+                clearInterval(timer);
+                timer = null
+            });
+        });
+
+
+        function setMarker(position) {
+
+            setMapOnAll(null);
+            map.setCenter({lat: position.latitude, lng: position.longitude});
+            map.setZoom({zoom: 4});
+            marker = new google.maps.Marker({
+                position: {lat: position.latitude, lng: position.longitude},
+                map: map,
+                icon: icon
+            });
+            markers.push(marker);
+            return marker;
+
         }
 
         function setMapOnAll(map) {
@@ -71,6 +112,7 @@
                 markers[i].setMap(map);
             }
         }
+
 
         var getJSON = function (url, callback) {
             var xhr = new XMLHttpRequest();
