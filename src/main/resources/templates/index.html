@@ -6,64 +6,86 @@
 
 
     <style>
-        /* Set the size of the div element that contains the map */
         #map {
-            height: 700px; /* The height is 400 pixels */
-            width: 100%; /* The width is the width of the web page */
+            height: 500px;
+            width: 100%;
         }
     </style>
 
     <script
             src="http://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous">
+    </script>
 </head>
 <body>
 
 
-<h1>ISS tracker</h1>
-
+<h2>ISS tracker</h2>
 
 <div id="map"></div>
 
+<input id="clickMe" type="button" value="Start Tracking" onclick="tracking();"/>
+
 
 <script>
-
     function initMap() {
 
         var intervalInMilliseconds = 1000;
         var markers = [];
-        // var icon = 'https://i.ibb.co/72gpnJ4/956251-200.png';
-
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 8,
-            center: {lat: 0, lng: 0},
+            center: {lat: 51.11007742432243, lng: 17.033081393335124},
             mapTypeId: 'hybrid'
         });
 
+        var icon = {
+            url: "https://i.ibb.co/72gpnJ4/956251-200.png",
+            scaledSize: new google.maps.Size(70, 70), // scaled size
+            origin: new google.maps.Point(0, 0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
 
-        setInterval(mycode, intervalInMilliseconds);
+        var el = document.getElementById("clickMe");
+        if (el.addEventListener)
+            el.addEventListener("click", trackIss, false);
+        else if (el.attachEvent)
+            el.attachEvent('onclick', trackIss());
 
-        function mycode() {
-            getJSON('http://localhost:8080/position',
-                function (err, data) {
-                    if (err !== null) {
-                        console.log('Something went wrong: ' + err);
-                    } else {
+        document.getElementById("clickMe").onclick = function () {};
 
-                        setMapOnAll(null);
 
-                        map.setCenter({lat: data.latitude, lng: data.longitude});
-                        map.setZoom({zoom: 9});
-                        var marker = new google.maps.Marker({
-                            position: {lat: data.latitude, lng: data.longitude},
-                            map: map,
-                            // icon: icon
-                        });
-                        markers.push(marker);
-                    }
-                });
+        function trackIss() {
+
+            setInterval(getCurrentPosition, intervalInMilliseconds);
+
+            function getCurrentPosition() {
+
+                getJSON('http://localhost:8080/position',
+                    function (err, data) {
+                        if (err !== null) {
+                            console.log('Something went wrong: ' + err);
+                        } else {
+                            setMarker(data)
+                        }
+                    });
+            }
+        }
+
+
+        function setMarker(position) {
+
+            setMapOnAll(null);
+            map.setCenter({lat: position.latitude, lng: position.longitude});
+            map.setZoom({zoom: 9});
+            var marker = new google.maps.Marker({
+                position: {lat: position.latitude, lng: position.longitude},
+                map: map,
+                icon: icon
+            });
+            markers.push(marker);
+
         }
 
         function setMapOnAll(map) {
@@ -71,6 +93,7 @@
                 markers[i].setMap(map);
             }
         }
+
 
         var getJSON = function (url, callback) {
             var xhr = new XMLHttpRequest();
