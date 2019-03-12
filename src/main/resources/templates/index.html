@@ -25,66 +25,85 @@
 
 <div id="map"></div>
 
-<input id="clickMe" type="button" value="Start Tracking" onclick="tracking();"/>
+<!--<input id="clickMe" type="button" value="Start Tracking" onclick="tracking();"/>-->
+
+<input type="number" id="lat"/>
+<input type="number" id="lng"/>
+
+<input id="stop" type="button" value="stop"/>
+<input id="start" type="button" value="start"/>
 
 
 <script>
     function initMap() {
 
         var intervalInMilliseconds = 1000;
+        var currentLat;
+        var currentLng;
+        var marker;
         var markers = [];
 
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 8,
+            zoom: 6,
             center: {lat: 51.11007742432243, lng: 17.033081393335124},
             mapTypeId: 'hybrid'
         });
 
         var icon = {
             url: "https://i.ibb.co/72gpnJ4/956251-200.png",
-            scaledSize: new google.maps.Size(70, 70), // scaled size
-            origin: new google.maps.Point(0, 0), // origin
-            anchor: new google.maps.Point(0, 0) // anchor
+            scaledSize: new google.maps.Size(70, 70),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(0, 0)
         };
 
-        var el = document.getElementById("clickMe");
-        if (el.addEventListener)
-            el.addEventListener("click", trackIss, false);
-        else if (el.attachEvent)
-            el.attachEvent('onclick', trackIss());
+        $(function () {
+            var timer = null,
+                interval = intervalInMilliseconds,
+                value = 0;
 
-        document.getElementById("clickMe").onclick = function () {};
+            $("#start").click(function () {
+                if (timer !== null) return;
+                timer = setInterval(function () {
 
 
-        function trackIss() {
+                    getJSON('http://localhost:8080/position',
+                        function (err, data) {
+                            if (err !== null) {
+                                console.log('Something went wrong: ' + err);
+                            } else {
+                                setMarker(data);
 
-            setInterval(getCurrentPosition, intervalInMilliseconds);
+                                currentLat = marker.getPosition().lat();
+                                currentLng = marker.getPosition().lng();
 
-            function getCurrentPosition() {
+                                $("#lat").val(data.latitude);
+                                $("#lng").val(data.longitude);
 
-                getJSON('http://localhost:8080/position',
-                    function (err, data) {
-                        if (err !== null) {
-                            console.log('Something went wrong: ' + err);
-                        } else {
-                            setMarker(data)
-                        }
-                    });
-            }
-        }
+                            }
+                        });
+
+                }, interval);
+            });
+
+            $("#stop").click(function () {
+                clearInterval(timer);
+                timer = null
+            });
+        });
 
 
         function setMarker(position) {
 
             setMapOnAll(null);
             map.setCenter({lat: position.latitude, lng: position.longitude});
-            map.setZoom({zoom: 9});
-            var marker = new google.maps.Marker({
+            map.setZoom({zoom: 4});
+            marker = new google.maps.Marker({
                 position: {lat: position.latitude, lng: position.longitude},
                 map: map,
                 icon: icon
             });
             markers.push(marker);
+            return marker;
 
         }
 
