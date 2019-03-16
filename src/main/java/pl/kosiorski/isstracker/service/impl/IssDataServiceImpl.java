@@ -12,16 +12,12 @@ import java.util.Optional;
 @Service
 public class IssDataServiceImpl implements IssDataService {
 
-  // JS interval in seconds;
-  private final int intervalValue = 1;
-
   private final IssDataRepository issDataRepository;
 
   @Autowired
   public IssDataServiceImpl(IssDataRepository issDataRepository) {
     this.issDataRepository = issDataRepository;
   }
-
 
   @Override
   public void save(IssData issData) {
@@ -32,10 +28,12 @@ public class IssDataServiceImpl implements IssDataService {
   public double countDistance(IssData actual) {
 
     double countedDistance = 0.0;
-
+    // JS interval in seconds;
+    int intervalValue = 1;
 
     Optional<IssData> previous = issDataRepository.findById(actual.getId() - 1);
-    if (previous.isPresent()) {
+
+    if (issDataRepository.findById(actual.getId() - 1).isPresent()) {
 
       Position startPosition = previous.get().getIss_position();
       Position endPosition = actual.getIss_position();
@@ -76,15 +74,33 @@ public class IssDataServiceImpl implements IssDataService {
     return countedDistance;
   }
 
-
   @Override
   public double countSpeed(IssData actual) {
 
     double countedSpeed = 0.0;
+    // JS interval in seconds;
+    int intervalValue = 1;
 
     Optional<IssData> previous = issDataRepository.findById(actual.getId() - 1);
     if (previous.isPresent()) {
 
+      String startTime = previous.get().getTimestamp();
+      String endTime = actual.getTimestamp();
+
+      double distance = countDistance(actual);
+
+      if (Integer.valueOf(actual.getTimestamp()) - Integer.valueOf(previous.get().getTimestamp())
+          > intervalValue + 1) {
+        return countedSpeed;
+      } else if (Integer.valueOf(actual.getTimestamp())
+              - Integer.valueOf(previous.get().getTimestamp())
+          <= 0) {
+        return countedSpeed;
+
+      } else {
+
+        return distance / (Integer.valueOf(endTime) - Integer.valueOf(startTime));
+      }
     }
 
     return countedSpeed;

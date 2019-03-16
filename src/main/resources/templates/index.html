@@ -24,10 +24,27 @@
 
 <div id="map"></div>
 
-<input type="number" id="lat"/>
-<input type="number" id="lng"/>
-<input type="number" id="timestamp"/>
-<input type="number" id="sumDistance"/>
+<div>Latitude:
+    <output type="number" id="lat"></output>
+</div>
+<br>
+
+<div>Longitude:
+    <output type="number" id="lng"></output>
+</div>
+<br>
+
+<div>Tracked distance:
+    <output type="number" id="sumDistance"></output>
+    km
+</div>
+<br>
+
+<div>Current Speed:
+    <output type="number" id="speed"></output>
+    km/s
+</div>
+<br>
 
 <input id="stop" type="button" value="stop"/>
 <input id="start" type="button" value="start"/>
@@ -37,11 +54,8 @@
     function initMap() {
 
         var intervalInMilliseconds = 1000;
-        var currentLat;
-        var currentLng;
         var currentDistance;
         var sumDistance = 0;
-        var currentTimestamp;
         var marker;
         var markers = [];
         var issData = [];
@@ -74,21 +88,21 @@
                                 console.log('Something went wrong: ' + err);
                             } else {
 
+                                setMarker(data.iss_position);
                                 currentDistance = data.distance;
 
-                                setMarker(data.iss_position);
 
                                 $("#lat").val(data.iss_position.latitude);
                                 $("#lng").val(data.iss_position.longitude);
-                                $("#timestamp").val(data.timestamp);
 
+                                const roundedSpeed = parseFloat(data.speed).toFixed(4);
+                                $("#speed").val(roundedSpeed);
 
                                 sumDistance = currentDistance + sumDistance;
-                                $("#sumDistance").val(sumDistance);
-
+                                const roundedSumDistance = parseFloat(sumDistance).toFixed(4);
+                                $("#sumDistance").val(roundedSumDistance);
 
                                 issData.push(data);
-
                             }
                         });
 
@@ -96,11 +110,12 @@
             });
 
             $("#stop").click(function () {
+
+                setMapOnAll(null);
                 clearInterval(timer);
                 sumDistance = 0;
                 markers = [];
                 timer = null;
-                setMapOnAll(null);
 
             });
         });
@@ -110,13 +125,13 @@
 
             setMapOnAll(null);
             map.setCenter({lat: position.latitude, lng: position.longitude});
-            // map.setZoom({zoom: 4});
             marker = new google.maps.Marker({
                 position: {lat: position.latitude, lng: position.longitude},
                 map: map,
                 icon: icon
             });
             markers.push(marker);
+
         }
 
         function setMapOnAll(map) {
@@ -124,7 +139,6 @@
                 markers[i].setMap(map);
             }
         }
-
 
         var getJSON = function (url, callback) {
             var xhr = new XMLHttpRequest();
@@ -140,48 +154,6 @@
             };
             xhr.send();
         };
-
-
-        // var postJSON = function () {
-        //     var xhr = new XMLHttpRequest();
-        //     var url = "http://localhost:8080/distance";
-        //     xhr.open("POST", url, true);
-        //     xhr.setRequestHeader("Content-Type", "application/json");
-        //     xhr.onreadystatechange = function () {
-        //         if (xhr.readyState === 4 && xhr.status === 200) {
-        //             var json = JSON.parse(xhr.responseText);
-        //             // console.log(json.email + ", " + json.password);
-        //         }
-        //     };
-
-
-        // var data = JSON.stringify({
-        //     "startPosition": firstMarker.getPosition().lat() + ", " + firstMarker.getPosition().lng(),
-        //     "endPosition": lastMarker.getPosition().lat() + ", " + lastMarker.getPosition().lng()
-        // });
-
-
-        // var data = JSON.stringify(
-        //     {
-        //         "tracker": [
-        //             {
-        //                 "latitude": issData.getPosition().lat(),
-        //                 "longitude": firstMarker.getPosition().lng(),
-        //                 "timestamp": firstMarker.getPosition().lng()
-        //             },
-        //             {
-        //                 "latitude": lastMarker.getPosition().lat(),
-        //                 "longitude": lastMarker.getPosition().lng()
-        //             }
-        //         ]
-        //     });
-
-
-        // var data = JSON.stringify(issData);
-        // xhr.send(data);
-
-        // }
-
     }
 </script>
 
