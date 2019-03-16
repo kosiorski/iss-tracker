@@ -38,16 +38,13 @@ public class IssDataServiceImpl implements IssDataService {
       Position startPosition = previous.get().getIss_position();
       Position endPosition = actual.getIss_position();
 
-      if (Integer.valueOf(actual.getTimestamp()) - Integer.valueOf(previous.get().getTimestamp())
-          > intervalValue + 1) {
+      if (Integer.valueOf(actual.getTimestamp()) - Integer.valueOf(previous.get().getTimestamp()) > intervalValue + 1) {
         return countedDistance;
-      } else if (Integer.valueOf(actual.getTimestamp())
-              - Integer.valueOf(previous.get().getTimestamp())
-          <= 0) {
+
+      } else if (Integer.valueOf(actual.getTimestamp()) - Integer.valueOf(previous.get().getTimestamp()) <= 0) {
         return countedDistance;
 
       } else {
-
         final int R = 6371; // Earth radius kilometers
 
         double latitudeDistance =
@@ -62,7 +59,7 @@ public class IssDataServiceImpl implements IssDataService {
                     * Math.sin(longitudeDistance / 2)
                     * Math.sin(longitudeDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c; // * 1000; // convert to meters
+        double distance = R * c; // * 1000 convert to meters
 
         double height = 0.0; // height difference
 
@@ -89,20 +86,16 @@ public class IssDataServiceImpl implements IssDataService {
 
       double distance = countDistance(actual);
 
-      if (Integer.valueOf(actual.getTimestamp()) - Integer.valueOf(previous.get().getTimestamp())
-          > intervalValue + 1) {
+      if (Integer.valueOf(actual.getTimestamp()) - Integer.valueOf(previous.get().getTimestamp()) > intervalValue + 1) {
         return countedSpeed;
-      } else if (Integer.valueOf(actual.getTimestamp())
-              - Integer.valueOf(previous.get().getTimestamp())
-          <= 0) {
+
+      } else if (Integer.valueOf(actual.getTimestamp()) - Integer.valueOf(previous.get().getTimestamp()) <= 0) {
         return countedSpeed;
 
       } else {
-
         return distance / (Integer.valueOf(endTime) - Integer.valueOf(startTime));
       }
     }
-
     return countedSpeed;
   }
 }

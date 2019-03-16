@@ -9,6 +9,7 @@
             height: 500px;
             width: 100%;
         }
+
     </style>
 
     <script
@@ -16,6 +17,7 @@
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous">
     </script>
+
 </head>
 <body>
 
@@ -23,34 +25,31 @@
 <h2>ISS tracker</h2>
 <div id="map"></div>
 
-<div>People in Space:
+<div>
     <output type="text" id="astronauts"></output>
 </div>
 <br>
 
-<div>Latitude:
-    <output type="number" id="lat"></output>
+<div>Current Latitude:
+    <output type="number" id="lat">-</output>
 </div>
-<br>
 
-<div>Longitude:
-    <output type="number" id="lng"></output>
+<div>Current Longitude:
+    <output type="number" id="lng">-</output>
 </div>
 <br>
 
 <div>Tracked distance:
-    <output type="number" id="sumDistance"></output>
+    <output type="number" id="sumDistance">0.0</output>
     km
 </div>
-<br>
-
 <div>Current Speed:
-    <output type="number" id="speed"></output>
+    <output type="number" id="speed">0.0</output>
     km/s
 </div>
 <br>
 
-<input id="start" type="button" value="start" style="color: green;"/>
+<input id="start" type="button" value="start" style="color: green"/>
 <input id="stop" type="button" value="stop" style="color: red"/>
 
 
@@ -79,7 +78,6 @@
 
 
         $(function () {
-
             getJSON('http://localhost:8080/astronauts',
                 function (err, data) {
                     if (err !== null) {
@@ -144,8 +142,6 @@
                 postJSON("http://localhost:8080/path", issData);
 
                 issData = [];
-
-
             });
         });
 
@@ -160,7 +156,6 @@
                 icon: icon
             });
             markers.push(marker);
-
         }
 
         function setMapOnAll(map) {

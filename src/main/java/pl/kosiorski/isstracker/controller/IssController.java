@@ -13,7 +13,6 @@ import pl.kosiorski.isstracker.model.AstronautData;
 import pl.kosiorski.isstracker.model.IssData;
 import pl.kosiorski.isstracker.model.Path;
 import pl.kosiorski.isstracker.service.AstronautDataService;
-import pl.kosiorski.isstracker.service.AstronautService;
 import pl.kosiorski.isstracker.service.IssDataService;
 import pl.kosiorski.isstracker.service.PathService;
 
@@ -24,18 +23,15 @@ import java.util.Arrays;
 public class IssController {
 
   private final IssDataService issDataService;
-  private final AstronautService astronautService;
   private final AstronautDataService astronautDataService;
   private final PathService pathService;
 
   @Autowired
   public IssController(
       IssDataService issDataService,
-      AstronautService astronautService,
       AstronautDataService astronautDataService,
       PathService pathService) {
     this.issDataService = issDataService;
-    this.astronautService = astronautService;
     this.astronautDataService = astronautDataService;
     this.pathService = pathService;
   }
