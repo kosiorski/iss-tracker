@@ -9,6 +9,4 @@ public interface IssDataService {
   double countDistance(IssData actual);
 
   double countSpeed(IssData actual);
-
-
 }

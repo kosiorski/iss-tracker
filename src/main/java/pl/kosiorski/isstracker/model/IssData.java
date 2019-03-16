@@ -15,11 +15,8 @@ public class IssData {
   private Long id;
 
   private String message;
-
   private String timestamp;
-
   private double distance;
-
   private double speed;
 
   @OneToOne(cascade = CascadeType.ALL)
