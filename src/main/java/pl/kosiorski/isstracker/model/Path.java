@@ -11,18 +11,17 @@ import java.util.List;
 @Setter
 public class Path {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    private double distance;
-    private double averageSpeed;
+  private double distance;
+  private double averageSpeed;
 
-    @OneToMany
-    @JoinTable(name = "path_issData")
-    private List<IssData> issDataList;
-
-
-
-
+  @OneToMany
+  @JoinTable(
+      name = "path_issData",
+      joinColumns = @JoinColumn(name = "path_id"),
+      inverseJoinColumns = @JoinColumn(name = "issData_id"))
+  private List<IssData> issDataList;
 }

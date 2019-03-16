@@ -46,8 +46,8 @@
 </div>
 <br>
 
-<input id="stop" type="button" value="stop"/>
-<input id="start" type="button" value="start"/>
+<input id="stop" type="button" value="stop" style="color: green"/>
+<input id="start" type="button" value="start" style="color: red;"/>
 
 
 <script>
@@ -95,11 +95,11 @@
                                 $("#lat").val(data.iss_position.latitude);
                                 $("#lng").val(data.iss_position.longitude);
 
-                                const roundedSpeed = parseFloat(data.speed).toFixed(4);
+                                const roundedSpeed = parseFloat(data.speed).toFixed(3);
                                 $("#speed").val(roundedSpeed);
 
                                 sumDistance = currentDistance + sumDistance;
-                                const roundedSumDistance = parseFloat(sumDistance).toFixed(4);
+                                const roundedSumDistance = parseFloat(sumDistance).toFixed(3);
                                 $("#sumDistance").val(roundedSumDistance);
 
                                 issData.push(data);
@@ -116,6 +116,11 @@
                 sumDistance = 0;
                 markers = [];
                 timer = null;
+
+                postJSON("http://localhost:8080/path", issData);
+
+                issData = [];
+
 
             });
         });
@@ -153,6 +158,20 @@
                 }
             };
             xhr.send();
+        };
+
+        var postJSON = function (url, data) {
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var json = JSON.parse(xhr.responseText);
+                    console.log(json);
+                }
+            };
+            xhr.send(JSON.stringify(data));
         };
     }
 </script>

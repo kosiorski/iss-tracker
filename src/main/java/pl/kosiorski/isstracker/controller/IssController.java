@@ -10,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 import pl.kosiorski.isstracker.model.Astronaut;
 import pl.kosiorski.isstracker.model.AstronautData;
 import pl.kosiorski.isstracker.model.IssData;
-import pl.kosiorski.isstracker.model.Path;
 import pl.kosiorski.isstracker.service.AstronautDataService;
 import pl.kosiorski.isstracker.service.AstronautService;
 import pl.kosiorski.isstracker.service.IssDataService;
@@ -68,10 +67,8 @@ public class IssController {
   }
 
   @PostMapping("/path")
-  public Path savePath(@RequestBody IssData[] issDataArray){
+  public void savePath(@RequestBody Object object){
 
-
-    Path path = new Path();
-    return path;
+    System.out.println(object);
   }
 }
