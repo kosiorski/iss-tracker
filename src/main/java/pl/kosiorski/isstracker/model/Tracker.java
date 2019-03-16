@@ -23,4 +23,6 @@ public class Tracker {
   private Position endPosition;
 
   private double distance;
+
+
 }

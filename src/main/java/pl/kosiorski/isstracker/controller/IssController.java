@@ -3,9 +3,14 @@ package pl.kosiorski.isstracker.controller;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import pl.kosiorski.isstracker.model.*;
+import pl.kosiorski.isstracker.model.Astronaut;
+import pl.kosiorski.isstracker.model.AstronautData;
+import pl.kosiorski.isstracker.model.IssData;
+import pl.kosiorski.isstracker.model.Tracker;
 import pl.kosiorski.isstracker.service.AstronautDataService;
 import pl.kosiorski.isstracker.service.AstronautService;
 import pl.kosiorski.isstracker.service.IssDataService;
@@ -33,14 +38,6 @@ public class IssController {
     this.astronautDataService = astronautDataService;
   }
 
-  //  @GetMapping("/iss")
-  //  public IssData getIssData() {
-  //
-  //    HomepageController.getIssDataFromJson(issDataService);
-  //
-  //    return issData;
-  //  }
-
   @GetMapping("/astronauts")
   public List<Astronaut> getAstronauts() {
 
@@ -56,18 +53,21 @@ public class IssController {
     return astronautDataService.findAllAstronauts(1L);
   }
 
-  @GetMapping("/distance")
-  public double getDistance() {
+  @PostMapping("/distance")
+  public void getDistance(@RequestBody String position) {
     Tracker tracker = new Tracker();
 
-    Position startPosition = new Position(-51.1757, -65.2334);
-    Position endPosition = new Position(-51.257, -64.3006);
+    //    Position startPosition = new Position(-51.1757, -65.2334);
+    //    Position endPosition = new Position(-51.257, -64.3006);
 
-    return trackerService.countDistance(startPosition, endPosition);
+    //    return trackerService.countDistance(startPosition, endPosition);
+
+    IssData[] data = new Gson().fromJson(position, IssData[].class);
+
   }
 
   @GetMapping("/position")
-  public Position getPosition() {
+  public IssData getPosition() {
 
     final String url = "http://api.open-notify.org/iss-now.json";
 
@@ -75,8 +75,14 @@ public class IssController {
     String json = restTemplate.getForObject(url, String.class);
 
     IssData issData = new Gson().fromJson(json, IssData.class);
+    issDataService.save(issData);
+    issData.setDistance(issDataService.countDistance(issData));
 
-    Position position = issData.getIss_position();
-    return position;
+//    System.out.println(issDataService.countDistance(issData));
+
+    return issData;
+
+    //    Position position = issData.getIss_position();
+    //    return position;
   }
 }

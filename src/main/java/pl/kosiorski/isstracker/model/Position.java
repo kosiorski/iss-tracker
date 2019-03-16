@@ -16,6 +16,7 @@ public class Position {
 
   private double latitude;
   private double longitude;
+  private String timestamp;
 
   @OneToOne(mappedBy = "iss_position")
   private IssData internationalSpaceStation;
