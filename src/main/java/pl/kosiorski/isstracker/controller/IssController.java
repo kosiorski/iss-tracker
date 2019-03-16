@@ -1,5 +1,7 @@
 package pl.kosiorski.isstracker.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,8 @@ import pl.kosiorski.isstracker.service.AstronautDataService;
 import pl.kosiorski.isstracker.service.AstronautService;
 import pl.kosiorski.isstracker.service.IssDataService;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -67,8 +71,20 @@ public class IssController {
   }
 
   @PostMapping("/path")
-  public void savePath(@RequestBody Object object){
+  public void savePath(@RequestBody String jsonArray) {
 
-    System.out.println(object);
+    IssData[] jsonToArray;
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+    try {
+      jsonToArray = objectMapper.readValue(jsonArray, IssData[].class);
+
+      Arrays.stream(jsonToArray).forEach(System.out::println);
+
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
   }
 }
