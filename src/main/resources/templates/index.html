@@ -21,8 +21,12 @@
 
 
 <h2>ISS tracker</h2>
-
 <div id="map"></div>
+
+<div>People in Space:
+    <output type="text" id="astronauts"></output>
+</div>
+<br>
 
 <div>Latitude:
     <output type="number" id="lat"></output>
@@ -46,8 +50,8 @@
 </div>
 <br>
 
-<input id="stop" type="button" value="stop" style="color: green"/>
-<input id="start" type="button" value="start" style="color: red;"/>
+<input id="start" type="button" value="start" style="color: green;"/>
+<input id="stop" type="button" value="stop" style="color: red"/>
 
 
 <script>
@@ -59,7 +63,6 @@
         var marker;
         var markers = [];
         var issData = [];
-
 
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 6,
@@ -73,6 +76,27 @@
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(0, 0)
         };
+
+
+        $(function () {
+
+            getJSON('http://localhost:8080/astronauts',
+                function (err, data) {
+                    if (err !== null) {
+                        console.log('Something went wrong: ' + err);
+                    } else {
+
+                        var astronautsMsg = "There are currently " + data.number + " people in space: ";
+
+                        console.log(data.people);
+                        for (var i = 0; i < data.people.length; i++) {
+                            astronautsMsg += data.people[i].name + ' on ' + data.people[i].craft + ', ';
+                        }
+                        $("#astronauts").val(astronautsMsg);
+                    }
+                });
+        });
+
 
         $(function () {
             var timer = null,
@@ -118,9 +142,6 @@
                 timer = null;
 
                 postJSON("http://localhost:8080/path", issData);
-
-                console.log(JSON.stringify(issData));
-
 
                 issData = [];
 
@@ -170,7 +191,6 @@
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    var json = JSON.parse(xhr.responseText);
                     console.log(json);
                 }
             };

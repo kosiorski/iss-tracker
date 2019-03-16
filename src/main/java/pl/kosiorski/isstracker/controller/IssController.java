@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import pl.kosiorski.isstracker.model.Astronaut;
 import pl.kosiorski.isstracker.model.AstronautData;
 import pl.kosiorski.isstracker.model.IssData;
 import pl.kosiorski.isstracker.model.Path;
@@ -20,7 +19,6 @@ import pl.kosiorski.isstracker.service.PathService;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 public class IssController {
@@ -43,7 +41,7 @@ public class IssController {
   }
 
   @GetMapping("/astronauts")
-  public List<Astronaut> getAstronauts() {
+  public AstronautData getAstronauts() {
 
     final String url = "http://api.open-notify.org/astros.json";
 
@@ -53,8 +51,7 @@ public class IssController {
     AstronautData astronautData = new Gson().fromJson(json, AstronautData.class);
     astronautDataService.save(astronautData);
 
-    // TODO
-    return astronautDataService.findAllAstronauts(1L);
+    return astronautData;
   }
 
   @GetMapping("/position")
