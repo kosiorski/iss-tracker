@@ -18,6 +18,10 @@ public class IssData {
 
   private String timestamp;
 
+  private double distance;
+
+  private double speed;
+
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "position_id")
   private Position iss_position;
