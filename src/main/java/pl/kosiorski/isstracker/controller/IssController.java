@@ -83,6 +83,9 @@ public class IssController {
       path.setIssDataList(Arrays.asList(jsonToArray));
       path.setAverageSpeed(pathService.countAverageSpeed(path));
       path.setDistance(pathService.countDistance(path));
+      path.setDuration(
+          Integer.valueOf(jsonToArray[jsonToArray.length - 1].getTimestamp())
+              - (Integer.valueOf(jsonToArray[0].getTimestamp())));
 
       pathService.save(path);
 

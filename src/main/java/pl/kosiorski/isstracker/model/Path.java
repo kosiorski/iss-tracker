@@ -17,6 +17,7 @@ public class Path {
 
   private double distance;
   private double averageSpeed;
+  private int duration;
 
   @OneToMany
   @JoinTable(
