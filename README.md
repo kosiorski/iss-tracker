@@ -7,6 +7,7 @@ The application displays the Google Map. After pressing the START button we star
 * current speed 
 * distance travelled (from the beginning of the tracking)
 * people currently in space
+
 After pressing the STOP button, the path of the space station with the duration, average speed, distance and each geographical location is stored in the database.
 
 Used stack:
