@@ -22,7 +22,7 @@ Used stack:
 * JQuery
 
 * Google Maps API
-* Punk API (https://punkapi.com/documentation/v2)
+* Open Notify API (http://open-notify.org/Open-Notify-API/ISS-Location-Now/)
 
 * MySql
 
