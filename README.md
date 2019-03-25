@@ -2,7 +2,8 @@
 
 Web application for tracking the international space station (ISS).
 
-The application displays the Google Map. After pressing the START button we start to follow the International Space Station. The application shows: 
+The application displays the Google Map. After pressing the START button we start to follow the International Space Station.
+Application shows: 
 * current longitude and latitude
 * current speed 
 * distance travelled (from the beginning of the tracking)
