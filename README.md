@@ -1,15 +1,15 @@
 # iss-tracker
 
-Web application for tracking the international space station (ISS).
+Web application for tracking the International Space Station (ISS).
 
-The application displays the Google Map. After pressing the START button we start to follow the International Space Station.
+Application displays the Google Map. After pressing START button we start to follow International Space Station.
 Application shows: 
 * current longitude and latitude
 * current speed 
 * distance travelled (from the beginning of the tracking)
 * people currently in space
 
-After pressing the STOP button, the path of the space station with the duration, average speed, distance and each geographical location is stored in the database.
+After pressing STOP button, the path of space station with the duration, average speed, distance and each geographical location is stored in the database.
 
 Used stack:
 
